@@ -1,8 +1,7 @@
 fightcade client
 ================
 
-This is a cross platform (Linux,  MacOSX, Windows) GUI client for
-[FightCade](http://www.fightcade.com) written in python using the
-[pyqt4](http://www.riverbankcomputing.com/software/pyqt/download) framework.
+This is a fork of the cross platform (Linux,  MacOSX, Windows) GUI client for
+[FightCade](http://www.fightcade.com) ported over to PyQt5
 
 &copy;2014 papasi, pof GPL v2 License
