@@ -20,17 +20,24 @@ fi
 
 case $distro in
     debian) 
-        apt-get install wine python3-pyqt5;;
+        apt-get install wine python3-pyqt5
+    ;;
     arch)
-        echo -e "If you haven't already, enable the [multilib] repo in pacman.conf for this option to work correctly.\n" 
-        pacman -S multilib/wine multilib/lib32-mpg123 extra/python-pyqt5 extra/phonon-qt5 extra/python-pyqt5 extra/python-sip;;
+        echo -e "If you haven't already, enable the [multilib] repo in pacman.conf for this option to work correctly.\n"
+        pacman -S multilib/wine multilib/lib32-mpg123 extra/python-pyqt5 extra/phonon-qt5 extra/python-pyqt5 extra/python-sip
+    ;;
     fedora)
-        yum install wine python3-qt5;;
+        yum install wine python3-qt5
+    ;;
     opensuse)
-        zypper in wine python3-qt5;;
+        zypper in wine python3-qt5
+    ;;
     gentoo)
-        emerge --ask virtual/wine dev-python/PyQt5;;
-    *) echo "Usage: ./linux-install.sh [distro option]";;
+        emerge --ask virtual/wine dev-python/PyQt5
+    ;;
+    *) 
+        echo "Usage: ./linux-install.sh [distro option]"
+    ;;
 esac
 
 exit 1
