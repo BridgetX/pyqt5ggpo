@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from PyQt4 import QtGui
+from PyQt5 import QtGui, QtWidgets
 import base64
 import ggpo.gui
 from ggpo.common.runtime import *
@@ -9,7 +9,7 @@ from ggpo.common.settings import Settings
 from ggpo.gui.ui.logindialog_ui import Ui_DialogLogin
 
 
-class LoginDialog(QtGui.QDialog, Ui_DialogLogin):
+class LoginDialog(QtWidgets.QDialog, Ui_DialogLogin):
     def __init__(self, parent=None):
         super(LoginDialog, self).__init__(parent)
         # ggpo.gui.loadUi(__file__, self)
@@ -74,7 +74,7 @@ class LoginDialog(QtGui.QDialog, Ui_DialogLogin):
 
         if not self.controller.connectTcp():
             # noinspection PyCallByClass,PyTypeChecker,PyArgumentList
-            QtGui.QMessageBox.warning(self, 'Error', "Cannot connect to fightcade.com")
+            QtWidgets.QMessageBox.warning(self, 'Error', "Cannot connect to fightcade.com")
             self.uiLoginBtn.setEnabled(True)
             return -1
 
@@ -106,7 +106,7 @@ class LoginDialog(QtGui.QDialog, Ui_DialogLogin):
         controller.sigStatusMessage.connect(self.onStatusMessage)
 
     def showEvent(self, QShowEvent):
-        QtGui.QDialog.showEvent(self, QShowEvent)
+        QtWidgets.QDialog.showEvent(self, QShowEvent)
         versionDiff = checkUpdate()
         if versionDiff > 0:
             self.uiNewVersionLink.setVisible(True)

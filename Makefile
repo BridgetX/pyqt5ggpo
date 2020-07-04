@@ -1,5 +1,5 @@
-PYUIC = pyuic4
-PYRCC = pyrcc4
+PYUIC = pyuic5
+PYRCC = pyrcc5
 
 UIFILES := $(wildcard ggpo/gui/ui/*.ui)
 UIPYFILES := $(UIFILES:.ui=_ui.py)

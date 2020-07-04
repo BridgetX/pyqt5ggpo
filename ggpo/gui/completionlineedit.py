@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
-from PyQt4.QtCore import Qt, QAbstractItemModel, QModelIndex, QEvent
-from PyQt4.QtGui import QLineEdit, QCompleter
+from PyQt5.QtCore import Qt, QAbstractItemModel, QModelIndex, QEvent
+from PyQt5.QtWidgets import QLineEdit, QCompleter
 from ggpo.common.cliclient import CLI
 from ggpo.common.playerstate import PlayerStates
 

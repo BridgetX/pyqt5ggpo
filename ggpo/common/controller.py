@@ -12,7 +12,7 @@ import fileinput
 from shutil import copyfile
 from random import randint
 from subprocess import Popen
-from PyQt4 import QtCore
+from PyQt5 import QtCore
 from ggpo.common.runtime import *
 from ggpo.common.geolookup import geolookup, isUnknownCountryCode
 from ggpo.common.player import Player
@@ -310,12 +310,12 @@ class Controller(QtCore.QObject):
             extrainfo = '({}) '.format(extrainfo)
         line = self.getPlayerPrefix(name, True)
         line += " challenged you - " + extrainfo
-	if "'" not in name:
-		line += "<a href='accept:" + name + "'><font color=green>accept</font></a>"
-		line += " / <a href='decline:" + name + "'><font color=green>decline</font></a>"
-	else:
-		line += '<a href="accept:' + name + '"><font color=green>accept</font></a>'
-		line += ' / <a href="decline:' + name + '"><font color=green>decline</font></a>'
+        if "'" not in name:
+                line += "<a href='accept:" + name + "'><font color=green>accept</font></a>"
+                line += " / <a href='decline:" + name + "'><font color=green>decline</font></a>"
+        else:
+                line += '<a href="accept:' + name + '"><font color=green>accept</font></a>'
+                line += ' / <a href="decline:' + name + '"><font color=green>decline</font></a>'
         return line
 
     def getPlayerColor(self, name):
@@ -810,7 +810,7 @@ class Controller(QtCore.QObject):
                 devnull = open(os.devnull, 'w')
                 Popen(args, stdout=devnull, stderr=devnull)
                 devnull.close()
-        except OSError, ex:
+        except OSError:
             self.sigStatusMessage.emit("Error executing " + " ".join(args) + "\n" + repr(ex))
 
         # backup FBA settings
@@ -835,7 +835,7 @@ class Controller(QtCore.QObject):
             # http://stackoverflow.com/questions/13414029/catch-interrupted-system-call-in-threading
             try:
                 inputready, outputready, exceptready = select.select(inputs, [], [], self.selectTimeout)
-            except select.error, ex:
+            except select.error:
                 if ex[0] != errno.EINTR and ex[0] != errno.EBADF:
                     raise
             if not inputready:

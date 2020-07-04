@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 import os.path
 
-import PyQt4.uic
+import PyQt5.uic
 
 __all__ = ['loadUi']
 
@@ -21,4 +21,4 @@ def loadUi(modpath, widget):
     uifile = os.path.join(basepath, 'ui/%s.ui' % basename)
 
     # load the ui
-    PyQt4.uic.loadUi(uifile, widget)
+    PyQt5.uic.loadUi(uifile, widget)

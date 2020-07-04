@@ -2,8 +2,8 @@
 from glob import glob
 import fnmatch
 import os
-from PyQt4 import QtCore, QtGui
-from PyQt4.QtCore import Qt
+from PyQt5 import QtCore, QtGui, QtWidgets
+from PyQt5.QtCore import Qt
 import operator
 from ggpo.common.allgames import allgames
 from ggpo.common.settings import Settings
@@ -99,7 +99,7 @@ class SavestatesModel(QtCore.QAbstractTableModel):
         self.emit(QtCore.SIGNAL("layoutChanged()"))
 
 
-class SavestatesDialog(QtGui.QDialog, Ui_SavestatesDialog):
+class SavestatesDialog(QtWidgets.QDialog, Ui_SavestatesDialog):
     def __init__(self, *args, **kwargs):
         super(SavestatesDialog, self).__init__(*args, **kwargs)
         self.setupUi(self)
@@ -141,7 +141,7 @@ class SavestatesDialog(QtGui.QDialog, Ui_SavestatesDialog):
                     idx = self.model.createIndex(row, 0)
                 if idx:
                     sm.clearSelection()
-                    sm.select(idx, QtGui.QItemSelectionModel.Select | QtGui.QItemSelectionModel.Rows)
+                    sm.select(idx, QtCore.QItemSelectionModel.Select | QtCore.QItemSelectionModel.Rows)
                     self.uiSavestatesTblv.scrollTo(idx)
                     e.ignore()
                     return

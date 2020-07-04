@@ -22,8 +22,8 @@ def parseClrMameProDat(filename):
             tbl[name] = [manufacturer, year, description]
     keys = sorted(tbl.keys(), key=str.lower)
     for k in keys:
-        print '{}:{},'.format(repr(k), repr(tbl[k]))
-    print '}'
+        print ('{}:{},'.format(repr(k), repr(tbl[k])))
+    print ('}')
 
 FBA_GAMEDB_MANUFACTURER, FBA_GAMEDB_YEAR, FBA_GAMEDB_DESCRIPTION = range(3)
 

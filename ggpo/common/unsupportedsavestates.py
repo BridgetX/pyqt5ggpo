@@ -5,9 +5,9 @@ import json
 import os
 import re
 import urllib
-import urllib2
+import urllib3
 import time
-from PyQt4 import QtCore
+from PyQt5 import QtCore
 from ggpo.common.util import logdebug, findGamesavesDir, sha256digest
 
 
@@ -105,7 +105,7 @@ class SyncWorker(QtCore.QObject):
                     self.sigStatusMessage.emit(
                         '{} files are current, added {}, updated {}'.format(
                             self.nochange, self.added, self.updated))
-        except Exception, ex:
+        except Exception:
             logdebug().error(str(ex))
         self.sigFinished.emit(self.added, self.updated, self.nochange)
 

@@ -5,20 +5,20 @@ import logging.handlers
 import os
 import re
 import sys
-import urllib2
+import urllib3
 from collections import defaultdict
-from PyQt4 import QtGui, QtCore
+from PyQt5 import QtGui, QtCore
 from ggpo.common.runtime import *
 from ggpo.common.settings import Settings
 from ggpo.common import copyright
 from os.path import expanduser
 
-
+# very likely that i forget to change the version number if i do an update
 def checkUpdate():
-    versionurl = 'https://raw.github.com/poliva/pyqtggpo/master/VERSION'
+    versionurl = 'https://raw.github.com/BridgetX/pyqt5ggpo/master/VERSION'
     #noinspection PyBroadException
     try:
-        response = urllib2.urlopen(versionurl, timeout=2)
+        response = urllib3.urlopen(versionurl, timeout=2)
         latestVersion = int(response.read().strip())
         return latestVersion - int(copyright.__version__)
     except:

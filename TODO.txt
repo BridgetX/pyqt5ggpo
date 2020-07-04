@@ -1,3 +1,4 @@
+* update linux_install.sh
 * add non-port based mechanism for ping
 * add an auto-update mechanism
 * add a search filter in the game list

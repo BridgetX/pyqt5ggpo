@@ -7,9 +7,9 @@ import sys
 import re
 import shutil
 import time
-from colortheme import ColorTheme
-from PyQt4 import QtCore, QtGui
-from PyQt4.QtCore import Qt
+from ggpo.gui.colortheme import ColorTheme
+from PyQt5 import QtCore, QtGui, QtWidgets
+from PyQt5.QtCore import Qt
 import ggpo.common.sound
 from ggpo.common.geolookup import geolookupInit
 from ggpo.common.runtime import *
@@ -28,7 +28,7 @@ from ggpo.gui.savestatesdialog import SavestatesDialog
 from ggpo.gui.ui.ggpowindow_ui import Ui_MainWindow
 
 # re-implement the QTreeWidgetItem
-class TreeWidgetItem(QtGui.QTreeWidgetItem):
+class TreeWidgetItem(QtWidgets.QTreeWidgetItem):
     def __lt__(self, other):
         column = self.treeWidget().sortColumn()
         key1 = self.text(column)
@@ -38,7 +38,7 @@ class TreeWidgetItem(QtGui.QTreeWidgetItem):
         except ValueError:
             return key1 < key2
 
-class GGPOWindow(QtGui.QMainWindow, Ui_MainWindow):
+class GGPOWindow(QtWidgets.QMainWindow, Ui_MainWindow):
     def __init__(self, QWidget_parent=None):
         super(GGPOWindow, self).__init__(QWidget_parent)
         self.setupUi(self)
@@ -71,18 +71,18 @@ class GGPOWindow(QtGui.QMainWindow, Ui_MainWindow):
         self.uiChannelsTree.itemDoubleClicked.connect(self.AddRemoveFavorites) # call to double click handler
 
     def aboutDialog(self):
-        QtGui.QMessageBox.information(self, 'About', copyright.about())
+        QtWidgets.QMessageBox.information(self, 'About', copyright.about())
 
     def addSplitterHandleToggleButton(self):
-        self.uiSplitter.setStyle(QtGui.QStyleFactory.create("Cleanlooks"))
+        self.uiSplitter.setStyle(QtWidgets.QStyleFactory.create("Cleanlooks"))
         handle = self.uiSplitter.handle(1)
-        layout = QtGui.QVBoxLayout()
+        layout = QtWidgets.QVBoxLayout()
         layout.setContentsMargins(0, 0, 0, 0)
-        button = QtGui.QToolButton(handle)
+        button = QtWidgets.QToolButton(handle)
         button.setArrowType(QtCore.Qt.LeftArrow)
         button.clicked.connect(self.onToggleSidebarAction)
         layout.addWidget(button)
-        button = QtGui.QToolButton(handle)
+        button = QtWidgets.QToolButton(handle)
         button.setArrowType(QtCore.Qt.RightArrow)
         button.clicked.connect(self.onToggleSidebarAction)
         layout.addWidget(button)
@@ -102,7 +102,7 @@ class GGPOWindow(QtGui.QMainWindow, Ui_MainWindow):
         return 'ui{}ThemeAct'.format(re.sub(r'[^a-zA-Z0-9]', '', styleName))
 
     def changeFont(self):
-        font, ok = QtGui.QFontDialog.getFont()
+        font, ok = QtWidgets.QFontDialog.getFont()
         if ok:
             Settings.setPythonValue(Settings.CHAT_HISTORY_FONT,
                                     [font.family(), font.pointSize(), font.weight(), font.italic()])
@@ -181,7 +181,7 @@ class GGPOWindow(QtGui.QMainWindow, Ui_MainWindow):
             dirname = os.path.dirname(oldval)
         else:
             dirname = os.path.expanduser("~")
-        fname = QtGui.QFileDialog.getOpenFileName(self, 'Locate custom wave file', dirname,
+        fname = QtWidgets.QFileDialog.getOpenFileName(self, 'Locate custom wave file', dirname,
                                                   "wav file (*.wav)")
         if fname:
             Settings.setValue(Settings.CUSTOM_CHALLENGE_SOUND_LOCATION, fname)
@@ -197,7 +197,7 @@ class GGPOWindow(QtGui.QMainWindow, Ui_MainWindow):
         else:
             dirname = os.path.expanduser("~")
 
-        fname = QtGui.QFileDialog.getOpenFileName(self, 'Locate ggpofba-ng.exe', dirname,
+        fname = QtWidgets.QFileDialog.getOpenFileName(self, 'Locate ggpofba-ng.exe', dirname,
                                                   "ggpofba-ng.exe (ggpofba-ng.exe)")
         if fname:
             Settings.setValue(Settings.GGPOFBA_LOCATION, fname)
@@ -209,25 +209,25 @@ class GGPOWindow(QtGui.QMainWindow, Ui_MainWindow):
             dirname = os.path.dirname(oldval)
         else:
             dirname = os.path.expanduser("~")
-        fname = QtGui.QFileDialog.getOpenFileName(self, 'Locate Geo mmdb file', dirname,
+        fname = QtWidgets.QFileDialog.getOpenFileName(self, 'Locate Geo mmdb file', dirname,
                                                   "Geo mmdb (*.mmdb)")
         if fname:
             Settings.setValue(Settings.GEOIP2DB_LOCATION, fname)
             geolookupInit()
 
     def locateUnsupportedSavestatesDirAct(self):
-        d = QtGui.QFileDialog.getExistingDirectory(self, "Open Directory",
+        d = QtWidgets.QFileDialog.getExistingDirectory(self, "Open Directory",
                                                    os.path.expanduser("~"),
-                                                   QtGui.QFileDialog.ShowDirsOnly
-                                                   | QtGui.QFileDialog.DontResolveSymlinks)
+                                                   QtWidgets.QFileDialog.ShowDirsOnly
+                                                   | QtWidgets.QFileDialog.DontResolveSymlinks)
         if d and os.path.isdir(d):
             Settings.setValue(Settings.UNSUPPORTED_GAMESAVES_DIR, d)
 
     def locateROMsDir(self):
-        d = QtGui.QFileDialog.getExistingDirectory(self, "Open Directory",
+        d = QtWidgets.QFileDialog.getExistingDirectory(self, "Open Directory",
                                                    os.path.expanduser("~"),
-                                                   QtGui.QFileDialog.ShowDirsOnly
-                                                   | QtGui.QFileDialog.DontResolveSymlinks)
+                                                   QtWidgets.QFileDialog.ShowDirsOnly
+                                                   | QtWidgets.QFileDialog.DontResolveSymlinks)
         if d and os.path.isdir(d):
             Settings.setValue(Settings.ROMS_DIR, d)
 
@@ -645,7 +645,7 @@ class GGPOWindow(QtGui.QMainWindow, Ui_MainWindow):
         if fname and os.path.isfile(fname):
             # noinspection PyBroadException
             try:
-                QtGui.QApplication.instance().setStyleSheet(open(fname).read())
+                QtWidgets.QApplication.instance().setStyleSheet(open(fname).read())
                 Settings.setValue(Settings.COLORTHEME, 'custom')
                 Settings.setValue(Settings.CUSTOM_THEME_FILENAME, fname)
                 ColorTheme.SELECTED = ColorTheme.SAFE
@@ -656,9 +656,9 @@ class GGPOWindow(QtGui.QMainWindow, Ui_MainWindow):
     def setStyleBuiltin(self, styleName):
         if styleName in QtGui.QStyleFactory.keys():
             ColorTheme.SELECTED = ColorTheme.LIGHT
-            QtGui.QApplication.instance().setStyleSheet('')
-            QtGui.QApplication.setStyle(QtGui.QStyleFactory.create(styleName))
-            QtGui.QApplication.setPalette(QtGui.QApplication.style().standardPalette())
+            QtWidgets.QApplication.instance().setStyleSheet('')
+            QtWidgets.QApplication.setStyle(QtWidgets.QStyleFactory.create(styleName))
+            QtWidgets.QApplication.setPalette(QtWidgets.QApplication.style().standardPalette())
             Settings.setValue(Settings.COLORTHEME, styleName)
 
     def setStyleCallback(self, styleName):
@@ -768,124 +768,124 @@ class GGPOWindow(QtGui.QMainWindow, Ui_MainWindow):
             if boolean:
                 SetChallengeSound(GetChallengeSoundFile(self.sender().text()))
 
-        self.uiMenuChallengeSoundGroup = QtGui.QActionGroup(self.uiChallengeSoundMenu, exclusive=True)
+        self.uiMenuChallengeSoundGroup = QtWidgets.QActionGroup(self.uiChallengeSoundMenu, exclusive=True)
 
-        self.uiactionBreakrev = QtGui.QAction("breakrev", self)
+        self.uiactionBreakrev = QtWidgets.QAction("breakrev", self)
         self.uiactionBreakrev.setCheckable(True)
         self.uiactionBreakrev.toggled.connect(onChallengeSoundToggled)
         self.uiChallengeSoundMenu.addAction(self.uiMenuChallengeSoundGroup.addAction(self.uiactionBreakrev))
 
-        self.uiactionCaptcomm = QtGui.QAction("captcomm", self)
+        self.uiactionCaptcomm = QtWidgets.QAction("captcomm", self)
         self.uiactionCaptcomm.setCheckable(True)
         self.uiactionCaptcomm.toggled.connect(onChallengeSoundToggled)
         self.uiChallengeSoundMenu.addAction(self.uiMenuChallengeSoundGroup.addAction(self.uiactionCaptcomm))
 
-        self.uiactionDdsom = QtGui.QAction("ddsom", self)
+        self.uiactionDdsom = QtWidgets.QAction("ddsom", self)
         self.uiactionDdsom.setCheckable(True)
         self.uiactionDdsom.toggled.connect(onChallengeSoundToggled)
         self.uiChallengeSoundMenu.addAction(self.uiMenuChallengeSoundGroup.addAction(self.uiactionDdsom))
 
-        self.uiactionDoubledr = QtGui.QAction("doubledr", self)
+        self.uiactionDoubledr = QtWidgets.QAction("doubledr", self)
         self.uiactionDoubledr.setCheckable(True)
         self.uiactionDoubledr.toggled.connect(onChallengeSoundToggled)
         self.uiChallengeSoundMenu.addAction(self.uiMenuChallengeSoundGroup.addAction(self.uiactionDoubledr))
 
-        self.uiactionGarou = QtGui.QAction("garou", self)
+        self.uiactionGarou = QtWidgets.QAction("garou", self)
         self.uiactionGarou.setCheckable(True)
         self.uiactionGarou.toggled.connect(onChallengeSoundToggled)
         self.uiChallengeSoundMenu.addAction(self.uiMenuChallengeSoundGroup.addAction(self.uiactionGarou))
 
-        self.uiactionJojobane = QtGui.QAction("jojobane", self)
+        self.uiactionJojobane = QtWidgets.QAction("jojobane", self)
         self.uiactionJojobane.setCheckable(True)
         self.uiactionJojobane.toggled.connect(onChallengeSoundToggled)
         self.uiChallengeSoundMenu.addAction(self.uiMenuChallengeSoundGroup.addAction(self.uiactionJojobane))
 
-        self.uiactionKarnovr = QtGui.QAction("karnovr", self)
+        self.uiactionKarnovr = QtWidgets.QAction("karnovr", self)
         self.uiactionKarnovr.setCheckable(True)
         self.uiactionKarnovr.toggled.connect(onChallengeSoundToggled)
         self.uiChallengeSoundMenu.addAction(self.uiMenuChallengeSoundGroup.addAction(self.uiactionKarnovr))
 
-        self.uiactionKof2002 = QtGui.QAction("kof2002", self)
+        self.uiactionKof2002 = QtWidgets.QAction("kof2002", self)
         self.uiactionKof2002.setCheckable(True)
         self.uiactionKof2002.toggled.connect(onChallengeSoundToggled)
         self.uiChallengeSoundMenu.addAction(self.uiMenuChallengeSoundGroup.addAction(self.uiactionKof2002))
 
-        self.uiactionKof98 = QtGui.QAction("kof98", self)
+        self.uiactionKof98 = QtWidgets.QAction("kof98", self)
         self.uiactionKof98.setCheckable(True)
         self.uiactionKof98.toggled.connect(onChallengeSoundToggled)
         self.uiChallengeSoundMenu.addAction(self.uiMenuChallengeSoundGroup.addAction(self.uiactionKof98))
 
-        self.uiactionMatrim = QtGui.QAction("matrim", self)
+        self.uiactionMatrim = QtWidgets.QAction("matrim", self)
         self.uiactionMatrim.setCheckable(True)
         self.uiactionMatrim.toggled.connect(onChallengeSoundToggled)
         self.uiChallengeSoundMenu.addAction(self.uiMenuChallengeSoundGroup.addAction(self.uiactionMatrim))
 
-        self.uiactionMshvsf = QtGui.QAction("mshvsf", self)
+        self.uiactionMshvsf = QtWidgets.QAction("mshvsf", self)
         self.uiactionMshvsf.setCheckable(True)
         self.uiactionMshvsf.toggled.connect(onChallengeSoundToggled)
         self.uiChallengeSoundMenu.addAction(self.uiMenuChallengeSoundGroup.addAction(self.uiactionMshvsf))
 
-        self.uiactionMslug3 = QtGui.QAction("mslug3", self)
+        self.uiactionMslug3 = QtWidgets.QAction("mslug3", self)
         self.uiactionMslug3.setCheckable(True)
         self.uiactionMslug3.toggled.connect(onChallengeSoundToggled)
         self.uiChallengeSoundMenu.addAction(self.uiMenuChallengeSoundGroup.addAction(self.uiactionMslug3))
 
-        self.uiactionMvsc = QtGui.QAction("mvsc", self)
+        self.uiactionMvsc = QtWidgets.QAction("mvsc", self)
         self.uiactionMvsc.setCheckable(True)
         self.uiactionMvsc.toggled.connect(onChallengeSoundToggled)
         self.uiChallengeSoundMenu.addAction(self.uiMenuChallengeSoundGroup.addAction(self.uiactionMvsc))
 
-        self.uiactionRbffspec = QtGui.QAction("rbffspec", self)
+        self.uiactionRbffspec = QtWidgets.QAction("rbffspec", self)
         self.uiactionRbffspec.setCheckable(True)
         self.uiactionRbffspec.toggled.connect(onChallengeSoundToggled)
         self.uiChallengeSoundMenu.addAction(self.uiMenuChallengeSoundGroup.addAction(self.uiactionRbffspec))
 
-        self.uiactionRingdest = QtGui.QAction("ringdest", self)
+        self.uiactionRingdest = QtWidgets.QAction("ringdest", self)
         self.uiactionRingdest.setCheckable(True)
         self.uiactionRingdest.toggled.connect(onChallengeSoundToggled)
         self.uiChallengeSoundMenu.addAction(self.uiMenuChallengeSoundGroup.addAction(self.uiactionRingdest))
 
-        self.uiactionRotd = QtGui.QAction("rotd", self)
+        self.uiactionRotd = QtWidgets.QAction("rotd", self)
         self.uiactionRotd.setCheckable(True)
         self.uiactionRotd.toggled.connect(onChallengeSoundToggled)
         self.uiChallengeSoundMenu.addAction(self.uiMenuChallengeSoundGroup.addAction(self.uiactionRotd))
 
-        self.uiactionSamsho2 = QtGui.QAction("samsho2", self)
+        self.uiactionSamsho2 = QtWidgets.QAction("samsho2", self)
         self.uiactionSamsho2.setCheckable(True)
         self.uiactionSamsho2.toggled.connect(onChallengeSoundToggled)
         self.uiChallengeSoundMenu.addAction(self.uiMenuChallengeSoundGroup.addAction(self.uiactionSamsho2))
 
-        self.uiactionSf2 = QtGui.QAction("sf2", self)
+        self.uiactionSf2 = QtWidgets.QAction("sf2", self)
         self.uiactionSf2.setCheckable(True)
         self.uiactionSf2.toggled.connect(onChallengeSoundToggled)
         self.uiChallengeSoundMenu.addAction(self.uiMenuChallengeSoundGroup.addAction(self.uiactionSf2))
 
-        self.uiactionSfiii3n = QtGui.QAction("sfiii3n", self)
+        self.uiactionSfiii3n = QtWidgets.QAction("sfiii3n", self)
         self.uiactionSfiii3n.setCheckable(True)
         self.uiactionSfiii3n.toggled.connect(onChallengeSoundToggled)
         self.uiChallengeSoundMenu.addAction(self.uiMenuChallengeSoundGroup.addAction(self.uiactionSfiii3n))
 
-        self.uiactionSsf2t = QtGui.QAction("ssf2t", self)
+        self.uiactionSsf2t = QtWidgets.QAction("ssf2t", self)
         self.uiactionSsf2t.setCheckable(True)
         self.uiactionSsf2t.toggled.connect(onChallengeSoundToggled)
         self.uiChallengeSoundMenu.addAction(self.uiMenuChallengeSoundGroup.addAction(self.uiactionSsf2t))
 
-        self.uiactionSvc = QtGui.QAction("svc", self)
+        self.uiactionSvc = QtWidgets.QAction("svc", self)
         self.uiactionSvc.setCheckable(True)
         self.uiactionSvc.toggled.connect(onChallengeSoundToggled)
         self.uiChallengeSoundMenu.addAction(self.uiMenuChallengeSoundGroup.addAction(self.uiactionSvc))
 
-        self.uiactionVsav = QtGui.QAction("vsav", self)
+        self.uiactionVsav = QtWidgets.QAction("vsav", self)
         self.uiactionVsav.setCheckable(True)
         self.uiactionVsav.toggled.connect(onChallengeSoundToggled)
         self.uiChallengeSoundMenu.addAction(self.uiMenuChallengeSoundGroup.addAction(self.uiactionVsav))
 
-        self.uiactionWhp = QtGui.QAction("whp", self)
+        self.uiactionWhp = QtWidgets.QAction("whp", self)
         self.uiactionWhp.setCheckable(True)
         self.uiactionWhp.toggled.connect(onChallengeSoundToggled)
         self.uiChallengeSoundMenu.addAction(self.uiMenuChallengeSoundGroup.addAction(self.uiactionWhp))
 
-        self.uiactionXmvsf = QtGui.QAction("xmvsf", self)
+        self.uiactionXmvsf = QtWidgets.QAction("xmvsf", self)
         self.uiactionXmvsf.setCheckable(True)
         self.uiactionXmvsf.toggled.connect(onChallengeSoundToggled)
         self.uiChallengeSoundMenu.addAction(self.uiMenuChallengeSoundGroup.addAction(self.uiactionXmvsf))
@@ -893,7 +893,7 @@ class GGPOWindow(QtGui.QMainWindow, Ui_MainWindow):
 
     def setupMenuSmoothing(self):
         # unfortunately Qt Designer doesn't support QActionGroup, we have to code it up
-        self.uiMenuSmoothingGroup = QtGui.QActionGroup(self.uiSmoothingMenu, exclusive=True)
+        self.uiMenuSmoothingGroup = QtWidgets.QActionGroup(self.uiSmoothingMenu, exclusive=True)
 
         def onSmoothingToggled(boolean):
             if boolean:
@@ -903,7 +903,7 @@ class GGPOWindow(QtGui.QMainWindow, Ui_MainWindow):
 
         desc = defaultdictinit({0: ' More jerky', 1: ' Default', 10: ' Laggy'})
         for smooth in range(11):
-            act = QtGui.QAction('&' + str(smooth) + desc[smooth], self)
+            act = QtWidgets.QAction('&' + str(smooth) + desc[smooth], self)
             act.setCheckable(True)
             act.toggled.connect(onSmoothingToggled)
             self.uiSmoothingMenu.addAction(self.uiMenuSmoothingGroup.addAction(act))
@@ -926,26 +926,26 @@ class GGPOWindow(QtGui.QMainWindow, Ui_MainWindow):
                 ret += c
             return ret
 
-        self.uiMenuThemeGroup = QtGui.QActionGroup(self.uiThemeMenu, exclusive=True)
+        self.uiMenuThemeGroup = QtWidgets.QActionGroup(self.uiThemeMenu, exclusive=True)
 
-        self.uiGNGThemeAct = QtGui.QAction(actionTitle("FightCade"), self)
+        self.uiGNGThemeAct = QtWidgets.QAction(actionTitle("FightCade"), self)
         self.uiGNGThemeAct.setCheckable(True)
         self.uiGNGThemeAct.toggled.connect(ColorTheme.setGNGTheme)
         self.uiThemeMenu.addAction(self.uiMenuThemeGroup.addAction(self.uiGNGThemeAct))
 
-        self.uiDarkThemeAct = QtGui.QAction(actionTitle("Dark Orange"), self)
+        self.uiDarkThemeAct = QtWidgets.QAction(actionTitle("Dark Orange"), self)
         self.uiDarkThemeAct.setCheckable(True)
         self.uiDarkThemeAct.toggled.connect(ColorTheme.setDarkTheme)
         self.uiThemeMenu.addAction(self.uiMenuThemeGroup.addAction(self.uiDarkThemeAct))
 
-        for k in QtGui.QStyleFactory.keys():
-            act = QtGui.QAction(actionTitle(k), self)
+        for k in QtWidgets.QStyleFactory.keys():
+            act = QtWidgets.QAction(actionTitle(k), self)
             act.setCheckable(True)
             act.toggled.connect(self.setStyleCallback(k))
             self.uiThemeMenu.addAction(self.uiMenuThemeGroup.addAction(act))
             cleanname = self.buildInStyleToActionName(k)
             setattr(self, cleanname, act)
-        self.uiCustomQssFileAct = QtGui.QAction(actionTitle("Custom Qss stylesheet"), self)
+        self.uiCustomQssFileAct = QtWidgets.QAction(actionTitle("Custom Qss stylesheet"), self)
         self.uiCustomQssFileAct.triggered.connect(self.setCustomQss)
         self.uiThemeMenu.addAction(self.uiCustomQssFileAct)
 

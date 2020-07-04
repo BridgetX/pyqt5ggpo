@@ -12,8 +12,7 @@ import sip
 
 sip.setapi('QString', 2)
 sip.setapi('QVariant', 2)
-from PyQt4 import QtGui, QtCore
-QtCore.QTextCodec.setCodecForCStrings(QtCore.QTextCodec.codecForName("utf-8"))
+from PyQt5 import QtGui, QtCore, QtWidgets
 from ggpo.common.controller import Controller
 from ggpo.common.settings import Settings
 from ggpo.gui.colortheme import ColorTheme
@@ -28,8 +27,8 @@ def main(argv=None):
     started = False
 
     # create the application if necessary
-    if not QtGui.QApplication.instance():
-        app = QtGui.QApplication(argv)
+    if not QtWidgets.QApplication.instance():
+        app = QtWidgets.QApplication(argv)
         app.setQuitOnLastWindowClosed(True)
         app.setOrganizationName("FightCade")
         QtCore.QCoreApplication.setApplicationName("FightCade")
