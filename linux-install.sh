@@ -17,24 +17,23 @@ if [ -x /usr/bin/apt-get ]; then
 	exit $?
 fi
 
-# still need to check the package names for these distros, feel free to rename and uncomment
 # archlinux
-#if [ -x /usr/bin/pacman ]; then
-#	pacman -S multilib/wine multilib/lib32-mpg123 extra/pyqt4-common extra/python-pyqt4 extra/phonon-qt4 extra/python2-pyqt4 extra/python2-sip
-#	exit $?
-#fi
+if [ -x /usr/bin/pacman ]; then
+    pacman -S multilib/wine multilib/lib32-mpg123 extra/python-pyqt5 extra/phonon-qt5 extra/python-pyqt5 extra/python-sip
+    exit $?
+fi
 
 # fedora (untested)
-#if [ -x /usr/bin/yum ]; then
-#	yum install wine pyqt4
-#	exit $?
-#fi
+if [ -x /usr/bin/yum ]; then
+    yum install wine python3-qt5
+    exit $?
+fi
 
 # suse/opensuse (untested)
-#if [ -x /usr/bin/zypper ] ; then
-#	zypper in wine python-qt4
-#	exit $?
-#fi
+if [ -x /usr/bin/zypper ] ; then
+    zypper in wine python3-qt5
+    exit $?
+fi
 
 echo "Your distribution is not supported :("
 echo "Please install 'pyqt5' and 'wine' to run fightcade."
