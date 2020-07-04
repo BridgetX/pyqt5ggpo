@@ -4,37 +4,32 @@
 uid=$(id -ur)
 if [ "$uid" != "0" ]; then
         echo "ERROR: This script must be run as root."
-	if [ -x /usr/bin/sudo ]; then
-		echo "try: sudo $0"
-	fi
+    if [ -x /usr/bin/sudo ]; then
+        echo "try: sudo $0"
+    fi
         exit 1
 fi
 
-# ubuntu/debian based distributions
-# hope this is the right pyqt5 package
-if [ -x /usr/bin/apt-get ]; then
-	apt-get install wine python3-pyqt5
-	exit $?
+if [ -z $1 ]
+then
+  echo -e "Arguments: debian (for Ubuntu/Debian based distros) : archlinux : fedora : opensuse : gentoo \nPlease install 'pyqt5' and 'wine' to run fightcade if your distro is not included in the above options.\n"
+elif [ -n $1 ]
+then
+  distro=$1
 fi
 
-# archlinux
-if [ -x /usr/bin/pacman ]; then
-    pacman -S multilib/wine multilib/lib32-mpg123 extra/python-pyqt5 extra/phonon-qt5 extra/python-pyqt5 extra/python-sip
-    exit $?
-fi
+case $distro in
+    debian) 
+        apt-get install wine python3-pyqt5;;
+    arch)
+        pacman -S multilib/wine multilib/lib32-mpg123 extra/python-pyqt5 extra/phonon-qt5 extra/python-pyqt5 extra/python-sip;;
+    fedora)
+        yum install wine python3-qt5;;
+    opensuse)
+        zypper in wine python3-qt5;;
+    gentoo)
+        emerge app-emulation/wine-vanilla dev-python/PyQt5;;
+    *) echo "Usage: ./linux-install.sh [distro option]";;
+esac
 
-# fedora (untested)
-if [ -x /usr/bin/yum ]; then
-    yum install wine python3-qt5
-    exit $?
-fi
-
-# suse/opensuse (untested)
-if [ -x /usr/bin/zypper ] ; then
-    zypper in wine python3-qt5
-    exit $?
-fi
-
-echo "Your distribution is not supported :("
-echo "Please install 'pyqt5' and 'wine' to run fightcade."
 exit 1
