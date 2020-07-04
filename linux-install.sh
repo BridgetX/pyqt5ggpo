@@ -28,7 +28,7 @@ case $distro in
     opensuse)
         zypper in wine python3-qt5;;
     gentoo)
-        emerge app-emulation/wine-vanilla dev-python/PyQt5;;
+        emerge --ask virtual/wine dev-python/PyQt5;;
     *) echo "Usage: ./linux-install.sh [distro option]";;
 esac
 
