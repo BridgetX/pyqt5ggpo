@@ -19,6 +19,7 @@ def findGeoIPDB():
 
 
 def freegeoip(ip):
+    # The old freegeopip.net shutdown and is now a parked domain, new solution needs to be found.
     url = 'http://freegeoip.net/json/'
     try:
         response = urllib3.urlopen(url + ip, timeout=1).read().strip()
@@ -35,6 +36,7 @@ def freegeoip(ip):
                 'region_code': '',
                 'region_name': '',
                 'zipcode': ''}
+
 
 _geoIP2Reader = False
 

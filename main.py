@@ -1,5 +1,13 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
+# noinspection PyUnresolvedReferences
+import ggpo.resources.ggpo_rc
+from ggpo.gui.logindialog import LoginDialog
+from ggpo.gui.ggpowindow import GGPOWindow
+from ggpo.gui.colortheme import ColorTheme
+from ggpo.common.settings import Settings
+from ggpo.common.controller import Controller
+from PyQt5 import QtGui, QtCore, QtWidgets
 import sys
 import platform
 
@@ -12,14 +20,6 @@ import sip
 
 sip.setapi('QString', 2)
 sip.setapi('QVariant', 2)
-from PyQt5 import QtGui, QtCore, QtWidgets
-from ggpo.common.controller import Controller
-from ggpo.common.settings import Settings
-from ggpo.gui.colortheme import ColorTheme
-from ggpo.gui.ggpowindow import GGPOWindow
-from ggpo.gui.logindialog import LoginDialog
-# noinspection PyUnresolvedReferences
-import ggpo.resources.ggpo_rc
 
 
 def main(argv=None):
@@ -33,7 +33,7 @@ def main(argv=None):
         app.setOrganizationName("FightCade")
         QtCore.QCoreApplication.setApplicationName("FightCade")
     ColorTheme.saveDefaultStyle()
-    if not Settings.value(Settings.COLORTHEME) or Settings.value(Settings.COLORTHEME)=='fightcade' or Settings.value(Settings.COLORTHEME)=='ggpong':
+    if not Settings.value(Settings.COLORTHEME) or Settings.value(Settings.COLORTHEME) == 'fightcade' or Settings.value(Settings.COLORTHEME) == 'ggpong':
         ColorTheme.setGNGTheme(True)
     controller = Controller()
     thread = QtCore.QThread()
@@ -42,7 +42,7 @@ def main(argv=None):
     thread.start()
 
     def loggedIn():
-        if started==False:
+        if started == False:
             window = GGPOWindow()
             window.setWindowIcon(QtGui.QIcon(':/assets/icon-128.png'))
             window.setController(controller)
@@ -52,12 +52,12 @@ def main(argv=None):
             window.raise_()
             window.activateWindow()
 
-    UDP=False
-    port=6009
+    UDP = False
+    port = 6009
     while True:
         UDP = controller.connectUdp(port)
-        port=port-1
-        if (UDP==True or port < 6006):
+        port = port-1
+        if (UDP == True or port < 6006):
             break
 
     logindialog = LoginDialog()
@@ -67,7 +67,7 @@ def main(argv=None):
     logindialog.exec_()
     logindialog.raise_()
     logindialog.activateWindow()
-    started=True
+    started = True
 
     return app.exec_()
 

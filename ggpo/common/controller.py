@@ -122,14 +122,15 @@ class Controller(QtCore.QObject):
         if self.fba:
             return True
         else:
-            self.sigStatusMessage.emit("ERROR: ggpofba-ng.exe not found in fightcade folder: you will not be able to play or spectate! Did you extract FightCade from the zip before running it?")
+            self.sigStatusMessage.emit(
+                "ERROR: ggpofba-ng.exe not found in fightcade folder: you will not be able to play or spectate! Did you extract FightCade from the zip before running it?")
             return False
 
     def isRomAvailable(self, channel):
-        if channel=='lobby':
+        if channel == 'lobby':
             # always true for lobby
             return True
-        romdir=Settings.value(Settings.ROMS_DIR)
+        romdir = Settings.value(Settings.ROMS_DIR)
         if romdir:
             rom = os.path.join(romdir, "{}.zip".format(channel))
             if os.path.isfile(rom):
@@ -143,7 +144,7 @@ class Controller(QtCore.QObject):
         if self.channel == 'unsupported':
             return True
         if self.channel and self.channel != "lobby":
-            romdir=Settings.value(Settings.ROMS_DIR)
+            romdir = Settings.value(Settings.ROMS_DIR)
             if romdir:
                 rom = os.path.join(romdir, "{}.zip".format(self.rom))
                 if os.path.isfile(rom):
@@ -152,15 +153,18 @@ class Controller(QtCore.QObject):
             if os.path.isfile(rom):
                 return True
             else:
-                self.sigStatusMessage.emit('Warning: {}.zip not found. Required to play or spectate.'.format(self.rom))
-                self.sigStatusMessage.emit("Please configure Setting > Locate ROMs folder")
+                self.sigStatusMessage.emit(
+                    'Warning: {}.zip not found. Required to play or spectate.'.format(self.rom))
+                self.sigStatusMessage.emit(
+                    "Please configure Setting > Locate ROMs folder")
         return False
 
     def checkUnsupportedRom(self):
         if self.fba:
             d = findGamesavesDir()
             if d:
-                unsupported = os.path.join(os.path.dirname(self.fba), 'savestates', 'unsupported_ggpo.fs')
+                unsupported = os.path.join(os.path.dirname(
+                    self.fba), 'savestates', 'unsupported_ggpo.fs')
                 if os.path.isfile(unsupported):
                     unsupported = sha256digest(unsupported)
                     localJsonDigest = readLocalJsonDigest()
@@ -171,13 +175,13 @@ class Controller(QtCore.QObject):
 
     def connectTcp(self):
         self.tcpConnected = False
-        #noinspection PyBroadException
+        # noinspection PyBroadException
         try:
             if self.tcpSock:
                 self.tcpSock.close()
             self.tcpSock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
             self.channelport = Settings.value(Settings.PORT)
-            if self.channelport==None:
+            if self.channelport == None:
                 self.channelport = 7000
                 Settings.setValue(Settings.PORT, int(self.channelport))
             self.tcpSock.connect(('ggpo-ng.com', int(self.channelport),))
@@ -196,7 +200,8 @@ class Controller(QtCore.QObject):
             self.udpSock.bind(('0.0.0.0', port,))
             self.udpConnected = True
         except socket.error:
-            self.sigStatusMessage.emit("Cannot bind to port udp/{}".format(str(port)))
+            self.sigStatusMessage.emit(
+                "Cannot bind to port udp/{}".format(str(port)))
         return self.udpConnected
 
     def dispatch(self, seq, data):
@@ -248,9 +253,9 @@ class Controller(QtCore.QObject):
                 if status != 0:
                     codestr = Protocol.codeToString(origRequest)
                     logdebug().error("{} failed, data {}".format(codestr, repr(data)))
-                    if codestr=="SEND_CHALLENGE":
+                    if codestr == "SEND_CHALLENGE":
                         self.sigActionFailed.emit("SEND_CHALLENGE failed")
-                    elif codestr=="CANCEL_CHALLENGE":
+                    elif codestr == "CANCEL_CHALLENGE":
                         pass
                     else:
                         self.sigActionFailed.emit(codestr)
@@ -311,11 +316,11 @@ class Controller(QtCore.QObject):
         line = self.getPlayerPrefix(name, True)
         line += " challenged you - " + extrainfo
         if "'" not in name:
-                line += "<a href='accept:" + name + "'><font color=green>accept</font></a>"
-                line += " / <a href='decline:" + name + "'><font color=green>decline</font></a>"
+            line += "<a href='accept:" + name + "'><font color=green>accept</font></a>"
+            line += " / <a href='decline:" + name + "'><font color=green>decline</font></a>"
         else:
-                line += '<a href="accept:' + name + '"><font color=green>accept</font></a>'
-                line += ' / <a href="decline:' + name + '"><font color=green>decline</font></a>'
+            line += '<a href="accept:' + name + '"><font color=green>accept</font></a>'
+            line += ' / <a href="decline:' + name + '"><font color=green>decline</font></a>'
         return line
 
     def getPlayerColor(self, name):
@@ -339,13 +344,12 @@ class Controller(QtCore.QObject):
         icon = ''
         if useFlag:
             icon = self.getPlayerFlag(name)
-            if icon==None:
-                icon=''
+            if icon == None:
+                icon = ''
         if useFlag:
             return '{}<b><font color="{}">{}</font></b> '.format(icon, c, cgi.escape('<{}>'.format(name)))
         else:
             return '<b><font color="{}">{}</font></b> '.format(c, cgi.escape('<{}>'.format(name)))
-
 
     def ggpoPathJoin(self, *args):
         if self.fba:
@@ -355,7 +359,8 @@ class Controller(QtCore.QObject):
     def handleTcpResponse(self):
         if self.tcpReadState == self.STATE_TCP_READ_LEN:
             if len(self.tcpData) >= 4:
-                self.tcpResponseLen, self.tcpData = Protocol.extractInt(self.tcpData)
+                self.tcpResponseLen, self.tcpData = Protocol.extractInt(
+                    self.tcpData)
                 self.tcpReadState = self.STATE_TCP_READ_DATA
                 self.handleTcpResponse()
         elif self.tcpReadState == self.STATE_TCP_READ_DATA:
@@ -404,24 +409,27 @@ class Controller(QtCore.QObject):
             self.selectTimeout = 15
             self.sigLoginSuccess.emit()
         # password incorrect, user incorrect
-        #if result == 0x6 or result == 0x4:
+        # if result == 0x6 or result == 0x4:
         else:
             if self.tcpSock:
                 self.tcpSock.close()
                 self.tcpConnected = False
-            #if self.udpSock:
+            # if self.udpSock:
             #    self.udpSock.close()
             #    self.udpConnected = False
             self.sigLoginFailed.emit()
             #self.sigStatusMessage.emit("Login failed {}".format(result))
-            if result==6:
+            if result == 6:
                 self.sigStatusMessage.emit("Login failed: wrong password")
-            elif result==9:
-                self.sigStatusMessage.emit("Login failed: too many connections")
-            elif result==4:
-                self.sigStatusMessage.emit("Login failed: username doesn't exist into database")
-            elif result==8:
-                self.sigStatusMessage.emit("Clone connection closed.\nPlease login again.")
+            elif result == 9:
+                self.sigStatusMessage.emit(
+                    "Login failed: too many connections")
+            elif result == 4:
+                self.sigStatusMessage.emit(
+                    "Login failed: username doesn't exist into database")
+            elif result == 8:
+                self.sigStatusMessage.emit(
+                    "Clone connection closed.\nPlease login again.")
             else:
                 self.sigStatusMessage.emit("Login failed {}".format(result))
 
@@ -592,8 +600,8 @@ class Controller(QtCore.QObject):
         quark, data = Protocol.extractTLV(data)
         logdebug().info("Quark " + repr(quark))
         # when someone leaves and p1 is playing vs 'null'
-        if quark=='':
-            quark=p2
+        if quark == '':
+            quark = p2
         if quark.startswith('quark:served'):
             smooth = Settings.value(Settings.SMOOTHING)
             if smooth:
@@ -605,7 +613,8 @@ class Controller(QtCore.QObject):
     def parseStateChangesResponse(self, data):
         count, data = Protocol.extractInt(data)
         while count > 0 and len(data) >= 4:
-            state, p1, p2, playerinfo, data = self.__class__.extractStateChangesResponse(data)
+            state, p1, p2, playerinfo, data = self.__class__.extractStateChangesResponse(
+                data)
             if state == PlayerStates.PLAYING:
                 self.parsePlayerStartGameResponse(p1, p2, playerinfo)
                 if self.username == p1:
@@ -635,7 +644,7 @@ class Controller(QtCore.QObject):
                 msg = p1 + ' ' + PlayerStates.codeToString(state)
             logdebug().info(msg)
             count -= 1
-        #if len(data) > 0:
+        # if len(data) > 0:
         #    logdebug().error("stateChangesResponse, remaining data {}".format(repr(data)))
 
     def killPuncher(self):
@@ -690,7 +699,8 @@ class Controller(QtCore.QObject):
     def playChallengeSound(self):
         if not self.fba:
             return
-        wavfile = os.path.join(os.path.dirname(self.fba), "assets", "sf2-challenge.wav")
+        wavfile = os.path.join(os.path.dirname(
+            self.fba), "assets", "sf2-challenge.wav")
         if not os.path.isfile(wavfile):
             return
         if IS_OSX:
@@ -714,27 +724,31 @@ class Controller(QtCore.QObject):
         self.playing = {}
         self.awayfromkb = {}
 
-    def desktopComposition(self,flag):
+    def desktopComposition(self, flag):
         if IS_WINDOWS:
             try:
                 from ctypes import WinDLL
                 dwm = WinDLL("dwmapi.dll")
                 dwm.DwmEnableComposition(flag)
             except:
-                self.sigStatusMessage.emit("Unable to change Desktop Composition settings on this system")
+                self.sigStatusMessage.emit(
+                    "Unable to change Desktop Composition settings on this system")
                 self.uiCompositionDisableAct.setChecked(False)
                 self.uiCompositionEnableAct.setChecked(False)
 
-
     def createFbaIni(self):
 
-        fbaini = os.path.join(os.path.abspath(os.path.dirname(sys.argv[0])), 'config', 'ggpofba-ng.ini')
-        fbainidef = os.path.join(os.path.abspath(os.path.dirname(sys.argv[0])), 'config', 'ggpofba-ng.default.ini')
-        fbainibkp = os.path.join(os.path.abspath(os.path.expanduser("~")), 'ggpofba-ng.bkp.ini')
+        fbaini = os.path.join(os.path.abspath(
+            os.path.dirname(sys.argv[0])), 'config', 'ggpofba-ng.ini')
+        fbainidef = os.path.join(os.path.abspath(os.path.dirname(
+            sys.argv[0])), 'config', 'ggpofba-ng.default.ini')
+        fbainibkp = os.path.join(os.path.abspath(
+            os.path.expanduser("~")), 'ggpofba-ng.bkp.ini')
 
         # if ini file doesn't exist, try to restore FBA settings from backup
         if not os.path.isfile(fbaini) and os.path.isfile(fbainibkp):
-            self.sigStatusMessage.emit("Restoring emulator config. If game doesn't start do Settings -> Locate ROMs folder.")
+            self.sigStatusMessage.emit(
+                "Restoring emulator config. If game doesn't start do Settings -> Locate ROMs folder.")
             copyfile(fbainibkp, fbaini)
             self.setupROMsDir()
 
@@ -744,13 +758,14 @@ class Controller(QtCore.QObject):
 
     def setupROMsDir(self):
 
-        romdir=Settings.value(Settings.ROMS_DIR)
+        romdir = Settings.value(Settings.ROMS_DIR)
         if not romdir:
             return
 
-        #on linux & MAC, symlink the ROMs folder to avoid configuring FBA
+        # on linux & MAC, symlink the ROMs folder to avoid configuring FBA
         if not IS_WINDOWS:
-            fbaRomPath = os.path.join(os.path.abspath(os.path.dirname(sys.argv[0])), "ROMs")
+            fbaRomPath = os.path.join(os.path.abspath(
+                os.path.dirname(sys.argv[0])), "ROMs")
             # remove it if it's a link or an empty dir
             if os.path.islink(fbaRomPath):
                 os.remove(fbaRomPath)
@@ -763,10 +778,12 @@ class Controller(QtCore.QObject):
         if IS_WINDOWS:
             # make sure FBA is not running, otherwise we can't modify the config file
             self.killEmulator()
-            fbaini = os.path.join(os.path.abspath(os.path.dirname(sys.argv[0])), 'config', 'ggpofba-ng.ini')
+            fbaini = os.path.join(os.path.abspath(
+                os.path.dirname(sys.argv[0])), 'config', 'ggpofba-ng.ini')
             if fbaini and os.path.isfile(fbaini):
                 for line in fileinput.input(fbaini, inplace=True, backup='.bak'):
-                    new="szAppRomPaths[7] "+str(os.path.join(romdir.upper(),'')+"\\")
+                    new = "szAppRomPaths[7] " + \
+                        str(os.path.join(romdir.upper(), '')+"\\")
                     sys.stdout.write(re.sub("szAppRomPaths\[7\].*", new, line))
                 fileinput.close()
 
@@ -778,19 +795,23 @@ class Controller(QtCore.QObject):
         self.checkRom()
         self.fba = findFba()
         if not self.fba:
-            self.sigStatusMessage.emit("ERROR: make sure ggpofba-ng.exe is in the same folder as FightCade")
+            self.sigStatusMessage.emit(
+                "ERROR: make sure ggpofba-ng.exe is in the same folder as FightCade")
             return
         args = []
-        fba=self.fba
+        fba = self.fba
         if IS_WINDOWS:
-            fba=fba.replace('ggpofba-ng.exe', 'ggpofba.exe')
+            fba = fba.replace('ggpofba-ng.exe', 'ggpofba.exe')
         else:
             fba = fba.replace('ggpofba-ng.exe', 'ggpofba.sh')
         args = [fba, quark, '-w']
 
-        fbaini = os.path.join(os.path.abspath(os.path.dirname(sys.argv[0])), 'config', 'ggpofba-ng.ini')
-        fbadat = os.path.join(os.path.abspath(os.path.dirname(sys.argv[0])), 'config', 'ggpofba-ng.roms.dat')
-        fbainibkp = os.path.join(os.path.abspath(os.path.expanduser("~")), 'ggpofba-ng.bkp.ini')
+        fbaini = os.path.join(os.path.abspath(
+            os.path.dirname(sys.argv[0])), 'config', 'ggpofba-ng.ini')
+        fbadat = os.path.join(os.path.abspath(os.path.dirname(
+            sys.argv[0])), 'config', 'ggpofba-ng.roms.dat')
+        fbainibkp = os.path.join(os.path.abspath(
+            os.path.expanduser("~")), 'ggpofba-ng.bkp.ini')
 
         if not os.path.isfile(fbaini):
             self.createFbaIni()
@@ -798,7 +819,7 @@ class Controller(QtCore.QObject):
         logdebug().info(" ".join(args))
 
         if Settings.value(Settings.COMPOSITION_DISABLED):
-                self.desktopComposition(0)
+            self.desktopComposition(0)
 
         try:
             # starting python from cmd.exe and redirect stderr and we got
@@ -811,7 +832,8 @@ class Controller(QtCore.QObject):
                 Popen(args, stdout=devnull, stderr=devnull)
                 devnull.close()
         except OSError:
-            self.sigStatusMessage.emit("Error executing " + " ".join(args) + "\n" + repr(ex))
+            self.sigStatusMessage.emit(
+                "Error executing " + " ".join(args) + "\n" + repr(ex))
 
         # backup FBA settings
         if os.path.isfile(fbaini) and os.path.isfile(fbadat):
@@ -834,7 +856,8 @@ class Controller(QtCore.QObject):
             inputready, outputready, exceptready = None, None, None
             # http://stackoverflow.com/questions/13414029/catch-interrupted-system-call-in-threading
             try:
-                inputready, outputready, exceptready = select.select(inputs, [], [], self.selectTimeout)
+                inputready, outputready, exceptready = select.select(
+                    inputs, [], [], self.selectTimeout)
             except select.error:
                 if ex[0] != errno.EINTR and ex[0] != errno.EBADF:
                     raise
@@ -882,15 +905,18 @@ class Controller(QtCore.QObject):
         if not isRomPresent or not isFbaPresent:
             return
         if name in self.challengers:
-            self.sendAndRemember(Protocol.ACCEPT_CHALLENGE, Protocol.packTLV(name) + Protocol.packTLV(self.rom))
+            self.sendAndRemember(Protocol.ACCEPT_CHALLENGE, Protocol.packTLV(
+                name) + Protocol.packTLV(self.rom))
             self.challengers.remove(name)
 
     def sendAndForget(self, command, data=''):
-        logdebug().info('Sending {} seq {} {}'.format(Protocol.codeToString(command), self.sequence, repr(data)))
+        logdebug().info('Sending {} seq {} {}'.format(
+            Protocol.codeToString(command), self.sequence, repr(data)))
         self.sendtcp(struct.pack('!I', command) + data)
 
     def sendAndRemember(self, command, data=''):
-        logdebug().info('Sending {} seq {} {}'.format(Protocol.codeToString(command), self.sequence, repr(data)))
+        logdebug().info('Sending {} seq {} {}'.format(
+            Protocol.codeToString(command), self.sequence, repr(data)))
         self.tcpCommandsWaitingForResponse[self.sequence] = command
         self.sendtcp(struct.pack('!I', command) + data)
 
@@ -899,15 +925,17 @@ class Controller(QtCore.QObject):
         try:
             port = self.udpSock.getsockname()[1]
         except:
-            port=6009
-            #raise
-        authdata = Protocol.packTLV(username) + Protocol.packTLV(password) + Protocol.packInt(port) + Protocol.packInt(copyright.versionNum())
+            port = 6009
+            # raise
+        authdata = Protocol.packTLV(username) + Protocol.packTLV(
+            password) + Protocol.packInt(port) + Protocol.packInt(copyright.versionNum())
         self.sendAndRemember(Protocol.AUTH, authdata)
 
     def sendCancelChallenge(self, name=None):
         if (name is None and self.challenged) or (name and name == self.challenged):
             self.sigStatusMessage.emit("Cancelling challenge")
-            self.sendAndRemember(Protocol.CANCEL_CHALLENGE, Protocol.packTLV(self.challenged))
+            self.sendAndRemember(Protocol.CANCEL_CHALLENGE,
+                                 Protocol.packTLV(self.challenged))
             self.challenged = None
 
     def sendChallenge(self, name):
@@ -916,11 +944,12 @@ class Controller(QtCore.QObject):
         isRomPresent = self.checkRom()
         if not isRomPresent or not isFbaPresent:
             return
-        if (name==self.username):
+        if (name == self.username):
             self.runFBA(self.channel)
         else:
             self.sigStatusMessage.emit("Challenging "+name)
-            self.sendAndRemember(Protocol.SEND_CHALLENGE, Protocol.packTLV(name) + Protocol.packTLV(self.rom))
+            self.sendAndRemember(Protocol.SEND_CHALLENGE, Protocol.packTLV(
+                name) + Protocol.packTLV(self.rom))
             self.challenged = name
 
     def sendChat(self, line):
@@ -930,7 +959,8 @@ class Controller(QtCore.QObject):
         self.sendAndRemember(Protocol.CHAT, Protocol.packTLV(line))
 
     def sendDeclineChallenge(self, name):
-        self.sendAndRemember(Protocol.DECLINE_CHALLENGE, Protocol.packTLV(name))
+        self.sendAndRemember(Protocol.DECLINE_CHALLENGE,
+                             Protocol.packTLV(name))
         if name in self.challengers:
             self.challengers.remove(name)
 
@@ -946,8 +976,8 @@ class Controller(QtCore.QObject):
             else:
                 logdebug().error("Invalid channel {}".format(channel))
 
-        if (int(self.channelport)!=int(self.channels[channel]['port'])):
-            self.switchingServer=True
+        if (int(self.channelport) != int(self.channels[channel]['port'])):
+            self.switchingServer = True
             self.channelport = int(self.channels[channel]['port'])
             Settings.setValue(Settings.PORT, self.channelport)
             self.tcpSock.close()
@@ -957,7 +987,8 @@ class Controller(QtCore.QObject):
             self.sendAuth(self.username, self.password)
             if Settings.value(Settings.AWAY):
                 self.sendToggleAFK(1)
-        self.sendAndRemember(Protocol.JOIN_CHANNEL, Protocol.packTLV(self.channel))
+        self.sendAndRemember(Protocol.JOIN_CHANNEL,
+                             Protocol.packTLV(self.channel))
 
     def sendListChannels(self):
         self.sendAndRemember(Protocol.LIST_CHANNELS)
@@ -967,7 +998,7 @@ class Controller(QtCore.QObject):
 
     def sendMOTDRequest(self):
         self.sendAndRemember(Protocol.MOTD)
-        self.switchingServer=False
+        self.switchingServer = False
 
     def sendPingQueries(self):
         if self.udpConnected:
@@ -1008,14 +1039,16 @@ class Controller(QtCore.QObject):
         Settings.setBoolean(Settings.AWAY, state)
 
     def sendWelcome(self):
-        self.sendAndRemember(Protocol.WELCOME, '\x00\x00\x00\x00\x00\x00\x00\x1d\x00\x00\x00\x01')
+        self.sendAndRemember(
+            Protocol.WELCOME, '\x00\x00\x00\x00\x00\x00\x00\x1d\x00\x00\x00\x01')
 
     def sendtcp(self, msg):
         # length of whole packet = length of sequence + length of msg
         payloadLen = 4 + len(msg)
         # noinspection PyBroadException
         try:
-            self.tcpSock.send(struct.pack('!II', payloadLen, self.sequence) + str(msg))
+            self.tcpSock.send(struct.pack(
+                '!II', payloadLen, self.sequence) + str(msg))
         except:
             self.tcpConnected = False
             self.selectLoopRunning = False
