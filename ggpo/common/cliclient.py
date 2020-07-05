@@ -50,42 +50,35 @@ class CLI:
             controller.sendToggleAFK(1)
 
         def cliback():
-            controller.sigStatusMessage.emit(
-                "{} is back for more".format(controller.username))
+            controller.sigStatusMessage.emit("{} is back for more".format(controller.username))
             afkSetChecked(False)
             controller.sendToggleAFK(0)
 
         def clicancel():
             if controller.challenged:
-                controller.sigStatusMessage.emit(
-                    "Cancelled outgoing challenge to {}".format(controller.challenged))
+                controller.sigStatusMessage.emit("Cancelled outgoing challenge to {}".format(controller.challenged))
                 controller.sendCancelChallenge(controller.challenged)
             else:
-                controller.sigStatusMessage.emit(
-                    "No outgoing challenge to cancel")
+                controller.sigStatusMessage.emit("No outgoing challenge to cancel")
 
         def clichallenge(name):
             if name in controller.available:
                 controller.sigStatusMessage.emit("Challenging {}".format(name))
                 controller.sendChallenge(name)
             else:
-                controller.sigStatusMessage.emit(
-                    "{} is not available".format(name))
+                controller.sigStatusMessage.emit("{} is not available".format(name))
 
         def clidecline(name=None):
             if name:
-                controller.sigStatusMessage.emit(
-                    "Declined {}'s challenge".format(name))
+                controller.sigStatusMessage.emit("Declined {}'s challenge".format(name))
                 controller.sendDeclineChallenge(name)
             else:
                 for challenger in controller.challengers:
-                    controller.sigStatusMessage.emit(
-                        "Declined {}'s challenge".format(challenger))
+                    controller.sigStatusMessage.emit("Declined {}'s challenge".format(challenger))
                     controller.sendDeclineChallenge(challenger)
 
         def cligeoip():
-            names = controller.available.keys() + controller.awayfromkb.keys() + \
-                controller.playing.keys()
+            names = controller.available.keys() + controller.awayfromkb.keys() + controller.playing.keys()
             names.sort(key=str.lower)
             for n in names:
                 p = controller.players[n]
@@ -107,8 +100,7 @@ class CLI:
 
         def cliignore(name):
             if name in controller.ignored:
-                controller.sigStatusMessage.emit(
-                    "{} is already in ignore list".format(name))
+                controller.sigStatusMessage.emit("{} is already in ignore list".format(name))
             else:
                 controller.addIgnore(name)
 
@@ -119,15 +111,13 @@ class CLI:
             if name in controller.ignored:
                 controller.removeIgnore(name)
             else:
-                controller.sigStatusMessage.emit(
-                    "{} is not in ignore list".format(name))
+                controller.sigStatusMessage.emit("{} is not in ignore list".format(name))
 
         def cliwatch(name):
             if name in controller.playing.keys():
                 controller.sendSpectateRequest(name)
             else:
-                controller.sigStatusMessage.emit(
-                    "{} is not playing".format(name))
+                controller.sigStatusMessage.emit("{} is not playing".format(name))
 
         def clireplay(name):
             if '@' in name:
@@ -138,36 +128,30 @@ class CLI:
                 replay_id = name
             quark = "quark:stream,"+channel+","+replay_id+",7001"
             controller.runFBA(quark)
-            controller.sigStatusMessage.emit(
-                "Replaying game-id {}@{}".format(replay_id, channel))
+            controller.sigStatusMessage.emit("Replaying game-id {}@{}".format(replay_id, channel))
 
         def clidirect(name):
             try:
                 p = controller.players[name]
                 if (str(controller.username) < str(name)):
-                    side = 0
-                    port1 = 6000
-                    port2 = 6001
+                    side=0
+                    port1=6000
+                    port2=6001
                 else:
-                    side = 1
-                    port1 = 6001
-                    port2 = 6000
-                quark = "quark:direct," + \
-                    str(controller.channel)+","+str(port1)+"," + \
-                    str(p.ip)+","+str(port2)+","+str(side)
+                    side=1
+                    port1=6001
+                    port2=6000
+                quark = "quark:direct,"+str(controller.channel)+","+str(port1)+","+str(p.ip)+","+str(port2)+","+str(side)
                 controller.runFBA(quark)
-                controller.sigStatusMessage.emit(
-                    "Direct match with {} @ {}".format(name, controller.channel))
+                controller.sigStatusMessage.emit("Direct match with {} @ {}".format(name, controller.channel))
                 afkSetChecked(True)
                 controller.sendToggleAFK(1)
             except KeyError:
-                controller.sigStatusMessage.emit(
-                    "Can't find {} @ {}".format(name, controller.channel))
+                controller.sigStatusMessage.emit("Can't find {} @ {}".format(name, controller.channel))
 
         def cliplay():
             controller.runFBA(controller.channel)
-            controller.sigStatusMessage.emit(
-                "Launching {}".format(controller.channel))
+            controller.sigStatusMessage.emit("Launching {}".format(controller.channel))
 
         if line.startswith("/geo"):
             return cligeoip()
@@ -190,3 +174,4 @@ class CLI:
                     callback()
         else:
             clihelp()
+

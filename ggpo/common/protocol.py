@@ -74,7 +74,7 @@ class Protocol:
 
     @staticmethod
     def unpackInt(data):
-        n = 0
+        n=0
         try:
             n, = struct.unpack("!I", data)
         except:

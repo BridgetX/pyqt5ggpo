@@ -26,7 +26,6 @@ __version__ = 42
 def versionString():
     return "{0:.2f}".format(__version__/100.0)
 
-
 def versionNum():
     return __version__
 
@@ -36,6 +35,6 @@ def about():
     for author, url in __credits__:
         extra += author + '\n' + url + "\n"
     return __copyright__ + ' ' + __author__ + "\n" + __url__ + "\n" + \
-        'License: ' + __license__ + "\n" + \
-        'Version: ' + versionString() + "\n" + \
-        'Credits: ' + "\n" + extra
+           'License: ' + __license__ + "\n" + \
+           'Version: ' + versionString() + "\n" + \
+           'Credits: ' + "\n" + extra

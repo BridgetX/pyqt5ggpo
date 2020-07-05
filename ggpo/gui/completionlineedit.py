@@ -39,22 +39,20 @@ class PlayerNameCompletionModel(QAbstractItemModel):
             self._filtered = self._data
             self._rowcount = len(self._data)
             # noinspection PyUnresolvedReferences
-            self.dataChanged.emit(self.createIndex(
-                0, 0), self.createIndex(self._rowcount - 1, 0))
-        # if state == PlayerStates.AVAILABLE and name not in self._data:
+            self.dataChanged.emit(self.createIndex(0, 0), self.createIndex(self._rowcount - 1, 0))
+        #if state == PlayerStates.AVAILABLE and name not in self._data:
         elif name not in self._data:
             self._data.append(name)
             self._filtered = self._data
             self._rowcount = len(self._data)
             # noinspection PyUnresolvedReferences
-            self.dataChanged.emit(self.createIndex(
-                0, 0), self.createIndex(self._rowcount - 1, 0))
+            self.dataChanged.emit(self.createIndex(0, 0), self.createIndex(self._rowcount - 1, 0))
 
     def playersLoaded(self):
         self._data = CLI.commands.keys() + \
-            [p for p in self.controller.available.keys()] + \
-            [p for p, p2 in self.controller.playing.items()] + \
-            [p for p in self.controller.awayfromkb.keys()]
+                     [p for p in self.controller.available.keys()] + \
+                     [p for p, p2 in self.controller.playing.items()] + \
+                     [p for p in self.controller.awayfromkb.keys()]
         self._filtered = self._data
         self._rowcount = len(self._data)
 
@@ -68,7 +66,7 @@ class PlayerNameCompletionModel(QAbstractItemModel):
 
     def setFilter(self, prefix):
         self._prefix = prefix.lower()
-        self._filtered = []
+        self._filtered=[]
         for x in self._data:
             if x.lower().find(self._prefix, 0) == 0:
                 self._filtered.append(x)
@@ -76,8 +74,7 @@ class PlayerNameCompletionModel(QAbstractItemModel):
                 self._filtered.append(x)
         self._rowcount = len(self._filtered)
         # noinspection PyUnresolvedReferences
-        self.dataChanged.emit(self.createIndex(
-            0, 0), self.createIndex(self._rowcount - 1, 0))
+        self.dataChanged.emit(self.createIndex(0, 0), self.createIndex(self._rowcount - 1, 0))
 
 
 class PlayerNameCompleter(QCompleter):
@@ -140,14 +137,12 @@ class CompletionLineEdit(QLineEdit):
                     selectedIndexes = selmodel.selectedIndexes()
                     if selectedIndexes:
                         # user highlighted one of the completion
-                        completion = model.data(
-                            selectedIndexes[0], Qt.EditRole)
+                        completion = model.data(selectedIndexes[0], Qt.EditRole)
                     else:
                         # non empty list of completions to choose from and user hit Tab
                         # we pick the first one for them
                         if model.rowCount() > 0:
-                            completion = model.data(
-                                model.index(0, 0), Qt.EditRole)
+                            completion = model.data(model.index(0, 0), Qt.EditRole)
                     if completion:
                         self._completer.popup().close()
                         self.insertCompletion(completion)
@@ -208,3 +203,4 @@ class CompletionLineEdit(QLineEdit):
         t = self.selectedText()
         self.setCursorPosition(c)
         return t
+

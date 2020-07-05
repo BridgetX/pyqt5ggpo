@@ -36,7 +36,6 @@ def freegeoip(ip):
                 'region_name': '',
                 'zipcode': ''}
 
-
 _geoIP2Reader = False
 
 

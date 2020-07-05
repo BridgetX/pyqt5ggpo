@@ -1,4 +1,4 @@
-* Update everything to Python 3 and PyQt5
-* Add non-port based mechanism for ping
-* Add an auto-update mechanism
-* Add a search filter in the game list
+* update linux_install.sh
+* add non-port based mechanism for ping
+* add an auto-update mechanism
+* add a search filter in the game list

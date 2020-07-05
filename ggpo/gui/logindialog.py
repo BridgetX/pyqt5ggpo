@@ -14,11 +14,11 @@ class LoginDialog(QtWidgets.QDialog, Ui_DialogLogin):
         super(LoginDialog, self).__init__(parent)
         # ggpo.gui.loadUi(__file__, self)
         if IS_WINDOWS:
-            download_url = 'http://www.fightcade.com/download/windows'
+            download_url='http://www.fightcade.com/download/windows'
         if IS_OSX:
-            download_url = 'http://www.fightcade.com/download/osx'
+            download_url='http://www.fightcade.com/download/osx'
         if IS_LINUX:
-            download_url = 'http://www.fightcade.com/download/linux'
+            download_url='http://www.fightcade.com/download/linux'
         self.setupUi(self)
         self.uiNewVersionLink.clicked.connect(
             lambda: openURL(download_url))
@@ -74,8 +74,7 @@ class LoginDialog(QtWidgets.QDialog, Ui_DialogLogin):
 
         if not self.controller.connectTcp():
             # noinspection PyCallByClass,PyTypeChecker,PyArgumentList
-            QtWidgets.QMessageBox.warning(
-                self, 'Error', "Cannot connect to fightcade.com")
+            QtWidgets.QMessageBox.warning(self, 'Error', "Cannot connect to fightcade.com")
             self.uiLoginBtn.setEnabled(True)
             return -1
 
@@ -89,8 +88,7 @@ class LoginDialog(QtWidgets.QDialog, Ui_DialogLogin):
 
     def onServerDisconnected(self):
         self.uiLoginBtn.setEnabled(True)
-        self.displayErrorMessage(
-            "Disconnected from FightCade.\nPlease restart application")
+        self.displayErrorMessage("Disconnected from FightCade.\nPlease restart application")
 
     def onStatusMessage(self, msg):
         self.uiLoginBtn.setEnabled(True)
@@ -115,5 +113,5 @@ class LoginDialog(QtWidgets.QDialog, Ui_DialogLogin):
         if versionDiff > 1:
             self.uiLoginBtn.setVisible(False)
             self.uiRegisterLink.setVisible(False)
-        # if Settings.value(Settings.AUTOLOGIN):
+        #if Settings.value(Settings.AUTOLOGIN):
         #    self.login()

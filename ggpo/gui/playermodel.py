@@ -5,7 +5,7 @@ from PyQt5 import QtCore, QtGui
 from PyQt5.QtCore import Qt
 
 
-# noinspection PyClassHasNoInit
+#noinspection PyClassHasNoInit
 class PlayerModelState:
     AVAILABLE = 0
     PLAYING = 1
@@ -61,7 +61,7 @@ class PlayerModel(QtCore.QAbstractTableModel):
         if role == Qt.DisplayRole:
             if col in [PlayerModel.PLAYER, PlayerModel.PING, PlayerModel.SPECTATORS, PlayerModel.OPPONENT]:
                 return self.players[row][col]
-        elif role == Qt.ToolTipRole and col == PlayerModel.STATE:
+        elif role == Qt.ToolTipRole and col==PlayerModel.STATE:
             val = self.players[row][col]
             if val == PlayerModelState.AVAILABLE:
                 return "Challenge"
@@ -81,17 +81,15 @@ class PlayerModel(QtCore.QAbstractTableModel):
         elif role == Qt.DecorationRole:
             return self.dataIcon(row, col)
         elif role == Qt.TextAlignmentRole:
-            if col == PlayerModel.PING or col == PlayerModel.SPECTATORS:
+            if col == PlayerModel.PING or col==PlayerModel.SPECTATORS:
                 return Qt.AlignRight | Qt.AlignVCenter
 
     def dataIcon(self, row, col):
         icon_path = None
         if col == PlayerModel.PLAYER:
-            icon_path = ':/flags/' + \
-                self.players[row][PlayerModel.COUNTRY] + '.png'
+            icon_path = ':/flags/' + self.players[row][PlayerModel.COUNTRY] + '.png'
         elif col == PlayerModel.OPPONENT:
-            icon_path = ':/flags/' + \
-                self.players[row][PlayerModel.OPPONENT_COUNTRY] + '.png'
+            icon_path = ':/flags/' + self.players[row][PlayerModel.OPPONENT_COUNTRY] + '.png'
         elif col == PlayerModel.STATE:
             val = self.players[row][col]
             if self.controller.challenged:
@@ -144,17 +142,14 @@ class PlayerModel(QtCore.QAbstractTableModel):
                 self.controller.sendCancelChallenge()
                 modified = True
             elif self.players[row][PlayerModel.STATE] == PlayerModelState.AVAILABLE:
-                self.controller.sendChallenge(
-                    self.players[row][PlayerModel.PLAYER])
+                self.controller.sendChallenge(self.players[row][PlayerModel.PLAYER])
                 modified = True
             elif self.players[row][PlayerModel.STATE] == PlayerModelState.PLAYING:
-                self.controller.sendSpectateRequest(
-                    self.players[row][PlayerModel.PLAYER])
+                self.controller.sendSpectateRequest(self.players[row][PlayerModel.PLAYER])
                 modified = True
             if modified:
                 idx1 = self.createIndex(0, PlayerModel.STATE)
-                idx2 = self.createIndex(
-                    len(self.players) - 1, PlayerModel.STATE)
+                idx2 = self.createIndex(len(self.players) - 1, PlayerModel.STATE)
                 # noinspection PyUnresolvedReferences
                 self.dataChanged.emit(idx1, idx2)
 
@@ -167,21 +162,18 @@ class PlayerModel(QtCore.QAbstractTableModel):
                 self.controller.sendCancelChallenge()
                 modified = True
             elif self.players[row][PlayerModel.STATE] == PlayerModelState.AVAILABLE:
-                self.controller.sendChallenge(
-                    self.players[row][PlayerModel.PLAYER])
+                self.controller.sendChallenge(self.players[row][PlayerModel.PLAYER])
                 modified = True
             elif self.players[row][PlayerModel.STATE] == PlayerModelState.PLAYING:
-                self.controller.sendSpectateRequest(
-                    self.players[row][PlayerModel.PLAYER])
+                self.controller.sendSpectateRequest(self.players[row][PlayerModel.PLAYER])
                 modified = True
             if modified:
                 idx1 = self.createIndex(0, PlayerModel.STATE)
-                idx2 = self.createIndex(
-                    len(self.players) - 1, PlayerModel.STATE)
+                idx2 = self.createIndex(len(self.players) - 1, PlayerModel.STATE)
                 # noinspection PyUnresolvedReferences
                 self.dataChanged.emit(idx1, idx2)
         if col == PlayerModel.PING:
-            name = self.players[row][col-1]
+            name=self.players[row][col-1]
             self.controller.sendPingQuery(self.controller.players[name])
             idx1 = self.createIndex(0, PlayerModel.PING)
             idx2 = self.createIndex(len(self.players) - 1, PlayerModel.PING)
@@ -191,15 +183,13 @@ class PlayerModel(QtCore.QAbstractTableModel):
     def reloadPlayers(self, *args):
         self.players = []
         for p in self.controller.available.keys():
-            ignored = (
-                p in self.controller.ignored) and Qt.Checked or Qt.Unchecked
+            ignored = (p in self.controller.ignored) and Qt.Checked or Qt.Unchecked
             self.players.append([PlayerModelState.AVAILABLE,
                                  p, self.getPlayerStat(p, 'ping'),
                                  '', '', ignored,
                                  self.getPlayerStat(p, 'cc'), ''])
         for p, p2 in self.controller.playing.items():
-            ignored = (
-                p in self.controller.ignored) and Qt.Checked or Qt.Unchecked
+            ignored = (p in self.controller.ignored) and Qt.Checked or Qt.Unchecked
             self.players.append([PlayerModelState.PLAYING,
                                  p, self.getPlayerStat(p, 'ping'),
                                  p2,
@@ -208,8 +198,7 @@ class PlayerModel(QtCore.QAbstractTableModel):
                                  self.getPlayerStat(p, 'cc'),
                                  self.getPlayerStat(p2, 'cc')])
         for p in self.controller.awayfromkb.keys():
-            ignored = (
-                p in self.controller.ignored) and Qt.Checked or Qt.Unchecked
+            ignored = (p in self.controller.ignored) and Qt.Checked or Qt.Unchecked
             self.players.append([PlayerModelState.AFK,
                                  p, self.getPlayerStat(p, 'ping'),
                                  '', '', ignored,
@@ -245,11 +234,10 @@ class PlayerModel(QtCore.QAbstractTableModel):
             self.lastSortOrder = order
             getter = operator.itemgetter(col)
             if col in [PlayerModel.PLAYER, PlayerModel.OPPONENT]:
-                def keyfunc(x): return getter(x).lower()
+                keyfunc = lambda x: getter(x).lower()
             else:
                 keyfunc = getter
             self.emit(QtCore.SIGNAL("layoutAboutToBeChanged()"))
             self.players = sorted(self.players, key=keyfunc, reverse=reverse)
-            self.players = sorted(
-                self.players, key=operator.itemgetter(PlayerModel.STATE))
+            self.players = sorted(self.players, key=operator.itemgetter(PlayerModel.STATE))
             self.emit(QtCore.SIGNAL("layoutChanged()"))

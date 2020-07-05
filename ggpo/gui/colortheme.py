@@ -64,7 +64,7 @@ class ColorTheme:
 
     SAFE = {
         'player': ['FF6600', 'CC99FF', '00CCFF', '00FF00',
-                   '9999FF', 'FF8080', 'FF00FF', '33CCCC', '99CC00']
+                    '9999FF', 'FF8080', 'FF00FF', '33CCCC', '99CC00']
     }
 
     SELECTED = LIGHT

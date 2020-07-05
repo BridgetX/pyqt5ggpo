@@ -3,7 +3,6 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 from ggpo.common.runtime import *
 from ggpo.common.settings import Settings
 
-
 class FlowLayout(QtWidgets.QLayout):
     def __init__(self, parent=None, margin=10, spacing=-1):
         super(FlowLayout, self).__init__(parent)
@@ -84,8 +83,7 @@ class FlowLayout(QtWidgets.QLayout):
                 lineHeight = 0
 
             if not testOnly:
-                item.setGeometry(QtCore.QRect(
-                    QtCore.QPoint(x, y), item.sizeHint()))
+                item.setGeometry(QtCore.QRect(QtCore.QPoint(x, y), item.sizeHint()))
 
             x = nextX
             lineHeight = max(lineHeight, item.sizeHint().height())
@@ -203,12 +201,10 @@ class EmoticonDialog(QtWidgets.QDialog):
         self.accept()
 
     def saveGeometrySettings(self):
-        Settings.setValue(Settings.EMOTICON_DIALOG_GEOMETRY,
-                          self.saveGeometry())
+        Settings.setValue(Settings.EMOTICON_DIALOG_GEOMETRY, self.saveGeometry())
 
     def value(self):
         return self._value
-
 
 if __name__ == '__main__':
     import sys
