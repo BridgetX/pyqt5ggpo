@@ -1,10 +1,10 @@
-#!/usr/bin/env python2
+#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 import sys
 import platform
 
 if platform.system() == 'Darwin':
-    sys.path.append("../Resources/lib/python2.7/site-packages/")
+    sys.path.append("../Resources/lib/python3.\*/site-packages/")
 
 import sip
 # Tell qt to return python string instead of QString
