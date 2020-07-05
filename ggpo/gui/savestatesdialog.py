@@ -93,7 +93,7 @@ class SavestatesModel(QtCore.QAbstractTableModel):
         self.lastSort = col
         self.lastSortDirection = order
         getter = operator.itemgetter(col)
-        keyfunc = lambda x: getter(x).lower()
+        def keyfunc(x): return getter(x).lower()
         self.emit(QtCore.SIGNAL("layoutAboutToBeChanged()"))
         self.filteredGames.sort(key=keyfunc, reverse=reverse)
         self.emit(QtCore.SIGNAL("layoutChanged()"))
@@ -107,8 +107,10 @@ class SavestatesDialog(QtWidgets.QDialog, Ui_SavestatesDialog):
         self.uiButtonBox.button(QtGui.QDialogButtonBox.Ok).setEnabled(False)
         self.model = SavestatesModel()
         self.uiSavestatesTblv.setModel(self.model)
-        self.uiSavestatesTblv.setSelectionBehavior(QtGui.QAbstractItemView.SelectRows)
-        self.uiSavestatesTblv.setSelectionMode(QtGui.QAbstractItemView.SingleSelection)
+        self.uiSavestatesTblv.setSelectionBehavior(
+            QtGui.QAbstractItemView.SelectRows)
+        self.uiSavestatesTblv.setSelectionMode(
+            QtGui.QAbstractItemView.SingleSelection)
         self.connectSignals()
         self.setDefaultColumns()
         self.uiSavestatesTblv.setSortingEnabled(True)
@@ -119,7 +121,8 @@ class SavestatesDialog(QtWidgets.QDialog, Ui_SavestatesDialog):
         self.model.dataChanged.connect(self.onDataChanged)
         self.uiFilterLineEdit.textEdited.connect(self.model.setFilter)
         self.uiSavestatesTblv.doubleClicked.connect(self.accept)
-        self.uiSavestatesTblv.selectionModel().selectionChanged.connect(self.onSelectionChanged)
+        self.uiSavestatesTblv.selectionModel(
+        ).selectionChanged.connect(self.onSelectionChanged)
         self.accepted.connect(self.saveGeometrySettings)
         self.finished.connect(self.saveGeometrySettings)
         self.rejected.connect(self.saveGeometrySettings)
@@ -131,7 +134,8 @@ class SavestatesDialog(QtWidgets.QDialog, Ui_SavestatesDialog):
                 idx = None
                 sm = self.uiSavestatesTblv.selectionModel()
                 if sm.hasSelection():
-                    selected = self.uiSavestatesTblv.selectionModel().selectedRows()[0]
+                    selected = self.uiSavestatesTblv.selectionModel().selectedRows()[
+                        0]
                     if e.key() == Qt.Key_Down and selected.row() < rc - 1:
                         idx = self.model.createIndex(selected.row() + 1, 0)
                     elif e.key() == Qt.Key_Up and selected.row() > 0:
@@ -141,7 +145,8 @@ class SavestatesDialog(QtWidgets.QDialog, Ui_SavestatesDialog):
                     idx = self.model.createIndex(row, 0)
                 if idx:
                     sm.clearSelection()
-                    sm.select(idx, QtCore.QItemSelectionModel.Select | QtCore.QItemSelectionModel.Rows)
+                    sm.select(idx, QtCore.QItemSelectionModel.Select |
+                              QtCore.QItemSelectionModel.Rows)
                     self.uiSavestatesTblv.scrollTo(idx)
                     e.ignore()
                     return
@@ -149,13 +154,15 @@ class SavestatesDialog(QtWidgets.QDialog, Ui_SavestatesDialog):
 
     def onAccepted(self):
         selected = self.uiSavestatesTblv.selectionModel().selectedRows()[0]
-        self.fsfile = self.model.filteredGames[selected.row()][SavestatesModel.FULLPATH]
+        self.fsfile = self.model.filteredGames[selected.row(
+        )][SavestatesModel.FULLPATH]
 
     def onDataChanged(self, startIdx, endIdx):
         sm = self.uiSavestatesTblv.selectionModel()
         sm.clearSelection()
         if endIdx.isValid() and endIdx.row() == 0:
-            sm.select(endIdx, QtGui.QItemSelectionModel.Select | QtGui.QItemSelectionModel.Rows)
+            sm.select(endIdx, QtGui.QItemSelectionModel.Select |
+                      QtGui.QItemSelectionModel.Rows)
 
     def onSelectionChanged(self):
         self.uiButtonBox.button(QtGui.QDialogButtonBox.Ok).setEnabled(
@@ -170,7 +177,8 @@ class SavestatesDialog(QtWidgets.QDialog, Ui_SavestatesDialog):
             self.uiSavestatesTblv.horizontalHeader().restoreState(saved)
 
     def saveGeometrySettings(self):
-        Settings.setValue(Settings.SAVESTATES_DIALOG_GEOMETRY, self.saveGeometry())
+        Settings.setValue(Settings.SAVESTATES_DIALOG_GEOMETRY,
+                          self.saveGeometry())
         Settings.setValue(Settings.SAVESTATES_DIALOG_TABLE_HEADER_STATE,
                           self.uiSavestatesTblv.horizontalHeader().saveState())
 

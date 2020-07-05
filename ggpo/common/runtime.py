@@ -1,7 +1,8 @@
 # -*- coding: utf-8 -*-
 import platform
 
-__all__ = ['IS_WINDOWS', 'IS_OSX', 'IS_LINUX', 'IS_WINDOWS_XP', 'Phonon', 'GeoIP2Reader', 'winsound']
+__all__ = ['IS_WINDOWS', 'IS_OSX', 'IS_LINUX',
+           'IS_WINDOWS_XP', 'Phonon', 'GeoIP2Reader', 'winsound']
 
 IS_WINDOWS = False
 IS_OSX = False
