@@ -5,6 +5,7 @@ This is a fork of the cross platform (Linux,  MacOSX, Windows) GUI client for
 
 ## CURRENT ISSUES
 - [ ] Figure out why login doesn't work
+- [ ] Figure out why the application stylesheet can't be parsed
 
 ## TODO
 - [ ] Update everything to PyQt5 and Python 3

@@ -14,11 +14,11 @@ class LoginDialog(QtWidgets.QDialog, Ui_DialogLogin):
         super(LoginDialog, self).__init__(parent)
         # ggpo.gui.loadUi(__file__, self)
         if IS_WINDOWS:
-            download_url='http://www.fightcade.com/download/windows'
+            download_url='https://www.fightcade.com/download/windows'
         if IS_OSX:
-            download_url='http://www.fightcade.com/download/osx'
+            download_url='https://www.fightcade.com/download/osx'
         if IS_LINUX:
-            download_url='http://www.fightcade.com/download/linux'
+            download_url='https://www.fightcade.com/download/linux'
         self.setupUi(self)
         self.uiNewVersionLink.clicked.connect(
             lambda: openURL(download_url))
@@ -42,7 +42,7 @@ class LoginDialog(QtWidgets.QDialog, Ui_DialogLogin):
         self.uiPasswordLine.returnPressed.connect(self.login)
         self.uiLoginBtn.clicked.connect(self.login)
         self.uiRegisterLink.clicked.connect(
-            lambda: openURL('http://www.fightcade.com/#register'))
+            lambda: openURL('https://www.fightcade.com/#register'))
 
     def displayErrorMessage(self, errmsg):
         self.uiErrorLbl.setText(errmsg)
