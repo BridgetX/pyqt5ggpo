@@ -6,6 +6,8 @@ This is a fork of the cross platform (Linux,  MacOSX, Windows) GUI client for
 ## CURRENT ISSUES
 - [ ] Figure out why login doesn't work
 - [ ] Figure out why the application stylesheet can't be parsed
+- [ ] Old service for geoip lookup is now a parked domain, new service must be found.
+- [ ] There is no Phonon in Qt5, new QtMultimedia module should be used.
 
 ## TODO
 - [ ] Update everything to PyQt5 and Python 3

@@ -14,9 +14,11 @@ from ggpo.common import copyright
 from os.path import expanduser
 
 # very likely that i forget to change the version number if i do an update
+
+
 def checkUpdate():
     versionurl = 'https://raw.github.com/BridgetX/pyqt5ggpo/master/VERSION'
-    #noinspection PyBroadException
+    # noinspection PyBroadException
     try:
         response = urllib3.urlopen(versionurl, timeout=2)
         latestVersion = int(response.read().strip())
@@ -39,7 +41,7 @@ def defaultdictinit(startdic):
 
 def findGamesavesDir():
     try:
-        d = os.path.join(os.path.dirname(findFba()),"savestates")
+        d = os.path.join(os.path.dirname(findFba()), "savestates")
         if d and os.path.isdir(d):
             return d
     except:
@@ -58,21 +60,21 @@ def findURLs(url):
 
 def findFba():
     #saved = Settings.value(Settings.GGPOFBA_LOCATION)
-    #if saved and os.path.isfile(saved):
+    # if saved and os.path.isfile(saved):
     #    return saved
 
-    FBA="ggpofba-ng.exe"
+    FBA = "ggpofba-ng.exe"
 
     # try to guess install directory:
     dirtest = os.path.abspath(os.path.dirname(sys.argv[0]))
-    if not os.path.isfile(os.path.join(dirtest,FBA)):
+    if not os.path.isfile(os.path.join(dirtest, FBA)):
         dirtest = os.path.dirname(os.path.abspath(__file__))
-    if not os.path.isfile(os.path.join(dirtest,FBA)):
+    if not os.path.isfile(os.path.join(dirtest, FBA)):
         dirtest = os.getcwd()
-    if not os.path.isfile(os.path.join(dirtest,FBA)):
+    if not os.path.isfile(os.path.join(dirtest, FBA)):
         return None
 
-    FBA=os.path.join(dirtest,FBA)
+    FBA = os.path.join(dirtest, FBA)
     return FBA
 
 
@@ -113,7 +115,8 @@ def loggerInit():
         if issubclass(exc_type, KeyboardInterrupt):
             sys.__excepthook__(exc_type, exc_value, exc_traceback)
             return
-        debuglog.error("<Uncaught exception>", exc_info=(exc_type, exc_value, exc_traceback))
+        debuglog.error("<Uncaught exception>", exc_info=(
+            exc_type, exc_value, exc_traceback))
     sys.excepthook = handle_exception
 
     if __name__ == "__main__":
@@ -124,7 +127,8 @@ def loggerInit():
     fh = logging.handlers.RotatingFileHandler(
         os.path.join(expanduser("~"), 'fightcade.log'), mode='a', maxBytes=500000, backupCount=10)
     fh.setLevel(logging.INFO)
-    formatter = logging.Formatter('%(asctime)s - %(message)s', "%Y-%m-%d %H:%M")
+    formatter = logging.Formatter(
+        '%(asctime)s - %(message)s', "%Y-%m-%d %H:%M")
     fh.setFormatter(formatter)
     userlog.addHandler(fh)
 
@@ -142,11 +146,14 @@ def replaceURLs(text):
     return re.sub(r'(https?:\/\/\S+)',
                   r'<a href="\1"><font color=green>\1</font></a>', text)
 
+
 def replaceReplayID(text):
-    return re.sub(r'(challenge\-[0-9]{4}\-[0-9]{10,11}[.][0-9]{2}(\@[a-z0-9_]+)?)',r'<a href="replay:\1"><font color=green>\1</font></a>',text)
+    return re.sub(r'(challenge\-[0-9]{4}\-[0-9]{10,11}[.][0-9]{2}(\@[a-z0-9_]+)?)', r'<a href="replay:\1"><font color=green>\1</font></a>', text)
+
 
 def nl2br(s):
     return '<br/>\n'.join(s.split('\n'))
+
 
 def sha256digest(fname):
     return hashlib.sha256(open(fname, 'rb').read()).hexdigest()

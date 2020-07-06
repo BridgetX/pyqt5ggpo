@@ -10,6 +10,14 @@ class PlayerStates:
 
     @staticmethod
     def codeToString(code):
+        """codeToString: Determines the players state (AFK, PLAYING, etc)
+
+        Args:
+            code [Hex code]: Hex code of the players state.
+
+        Returns:
+            [string]: Hex code identifier.
+        """
         if code == 0:
             return 'AVAILABLE'
         elif code == 1:

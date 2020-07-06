@@ -33,7 +33,8 @@ def writeLocalJsonDigest():
     if d:
         localjson = os.path.join(d, SyncWorker.JSON_INDEX_FILENAME)
         for filename in glob.glob(os.path.join(d, '*.fs')):
-            localJsonDigest[os.path.basename(filename)] = sha256digest(filename)
+            localJsonDigest[os.path.basename(
+                filename)] = sha256digest(filename)
         # noinspection PyBroadException
         try:
             f = open(localjson, 'w')
@@ -86,11 +87,14 @@ class SyncWorker(QtCore.QObject):
                 if not self.checkonly:
                     time.sleep(0.05)
                     localfile = os.path.join(d, filename)
-                    fileurl = self.SAVESTATES_GITHUB_BASE_URL + urllib.quote(filename)
+                    fileurl = self.SAVESTATES_GITHUB_BASE_URL + \
+                        urllib.quote(filename)
                     urllib.urlretrieve(fileurl, localfile)
-                    self.sigStatusMessage.emit('Downloaded {}'.format(localfile))
+                    self.sigStatusMessage.emit(
+                        'Downloaded {}'.format(localfile))
                     # remove config/games/<game>.fs
-                    gamefs=os.path.abspath(os.path.join(d,"..","config","games",filename.replace("_ggpo.fs",".fs")))
+                    gamefs = os.path.abspath(os.path.join(
+                        d, "..", "config", "games", filename.replace("_ggpo.fs", ".fs")))
                     if os.path.isfile(gamefs):
                         try:
                             os.remove(gamefs)
@@ -149,4 +153,3 @@ class UnsupportedSavestates(QtCore.QObject):
     @classmethod
     def sync(cls, statusMsgCallback=None, finishedCallback=None):
         cls.run(False, statusMsgCallback, finishedCallback)
-

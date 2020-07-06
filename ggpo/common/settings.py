@@ -50,7 +50,8 @@ class Settings:
     CHANNELS_FAVORITES = 'channelsFavorites'
     FILTER_FAVORITES = 'filterFavorites'
 
-    _settings = QSettings(os.path.join(os.path.abspath(os.path.expanduser("~")), 'ggpo-ng.ini'), QSettings.IniFormat)
+    _settings = QSettings(os.path.join(os.path.abspath(
+        os.path.expanduser("~")), 'ggpo-ng.ini'), QSettings.IniFormat)
 
     @staticmethod
     def setBoolean(key, val):
