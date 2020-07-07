@@ -19,8 +19,10 @@ from os.path import expanduser
 def checkUpdate():
     versionurl = 'https://raw.github.com/BridgetX/pyqt5ggpo/master/VERSION'
     # noinspection PyBroadException
+    http = urllib3.PoolManager()
     try:
-        response = urllib3.urlopen(versionurl, timeout=2)
+        response = urllib3.request('GET', versionurl, timeout=2)
+        #currently throwns an error as it doesn't just pull the '42' from the url and therefore can't be an int, can be fixed with BeautifulSoup but i'm looking for a method that doesn't require it.
         latestVersion = int(response.read().strip())
         return latestVersion - int(copyright.__version__)
     except:

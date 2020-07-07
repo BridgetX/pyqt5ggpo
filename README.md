@@ -4,7 +4,7 @@ This is a fork of the cross platform (Linux,  MacOSX, Windows) GUI client for
 [FightCade](http://www.fightcade.com) ported over to PyQt5, urllib2 was also changed to urllib3
 
 ## CURRENT ISSUES
-- [ ] Figure out why login doesn't work
+- [ ] Figure out why login doesn't work (Seem to be caused by the password being picked up as an string and not as bytes.)
 - [ ] Figure out why the application stylesheet can't be parsed
 - [ ] Old service for geoip lookup is now a parked domain, new service must be found.
 - [ ] There is no Phonon in Qt5, new QtMultimedia module should be used.
